@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1 # Update the API version here
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  rules:
+    - host: ticketing.dev
+      http:
+        paths:
+          - path: /api/users/?(.*)
+            pathType: Prefix # Add this line to specify the path type
+            backend:
+              service:
+                name: auth-srv # Modify the service reference
+                port:
+                  number: 3000
+          - path: /api/payments/?(.*)
+            pathType: Prefix # Add this line to specify the path type
+            backend:
+              service:
+                name: payments-srv # Modify the service reference
+                port:
+                  number: 3000
+          - path: /api/tickets/?(.*)
+            pathType: Prefix # Add this line to specify the path type
+            backend:
+              service:
+                name: tickets-srv # Modify the service reference
+                port:
+                  number: 3000
+          - path: /api/orders/?(.*)
+            pathType: Prefix # Add this line to specify the path type
+            backend:
+              service:
+                name: orders-srv # Modify the service reference
+                port:
+                  number: 3000
+          - path: /?(.*)
+            pathType: Prefix # Add this line to specify the path type
+            backend:
+              service:
+                name: client-srv # Modify the service reference
+                port:
+                  number: 3000
+                  # ^ this one needs to be last
